@@ -1,13 +1,16 @@
-from flask import Flask, render_template, make_response, request
-from flask.json import jsonify
+from flask import Flask, render_template, make_response, request, send_from_directory
 import threading
 import urllib.request
 import time
 import signal
+import os
+
 
 app = Flask(__name__)
 
 download_list = []
+error_list = []
+
 
 @app.route('/',  methods=['GET', 'POST'])
 def index():
@@ -15,8 +18,14 @@ def index():
         url = request.form['url']
         name = request.form['name']
         download_list.append((url,name))
-    return make_response(render_template('index.html'))
+    
+    downloads = os.listdir("./files")
+    downloads.pop(0)
+    return make_response(render_template('index.html', links = download_list, errors = error_list, downloads=downloads ))
 
+@app.route('/dl/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    return send_from_directory(directory="./files", filename=filename)
 
 
 
@@ -25,21 +34,22 @@ def download():
     while True:
         if len(download_list):
             url, name = download_list.pop()
-            filename = f"files/{name}"            
-            with urllib.request.urlopen(url) as file:
-                with open(filename, 'wb') as f:
-                    f.write(file.read())
+            filename = f"files/{name}"  
+            try:
+                urllib.request.urlretrieve(url=url, filename=filename)
+            except:
+                error_list.append(f"{name} could not be downloaded")           
         else:
-            # sleep = 1200
-            sleep = 2
+            sleep = 120
         time.sleep(sleep)
 
 
-hilo1 = threading.Thread(target=download)
-hilo1.start()
+
+thread = threading.Thread(target=download)
+thread.start()
     
 def signal_handler():
-    hilo1.join(1)
+    thread.join(1)
 
 signal.signal(signal.SIGINT , signal_handler)
 app.run(host='0.0.0.0', port=8000, debug=True)

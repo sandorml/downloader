@@ -3,17 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.0/milligram.css">
+    <title>****</title>
 </head>
 <body>
-    Hola
+    <dir class="container">
+        <h1>VPN Alternative</h1>
+            <fieldset>
+            <form action="" method="post">
+                <label for="url">URL: </label>
+                <input type="text" id="url" name="url" /><br>
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name" /><br>
+                <button class="button" type="submit">Download</button>
+            </form>
+        </fieldset>
+    <div class="row">
 
-    <form action="" method="post">
-        <label for="url">URL: </label>
-        <input type="text" id="url" name="url" /><br>
-        <label for="name">Name: </label>
-        <input type="text" id="name" name="name" /><br>
-        <button type="submit">Descargar</button>
-    </form>
+        <div class="column column-25">
+            <h3>Queue</h3>
+            <ul>
+                {% for link in links %}
+                <li>{{ link[1] }} : <a href="{{ link[0] }}">{{ link[0] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="column column-50">
+            <h3>Download List</h3>
+            <ul>
+                {% for download in downloads %}
+                <li><a href="/dl/{{ download }}">{{ download }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+
+        <div class="column column-25">    
+            <h3>Error List</h3>
+            <ol>
+                {% for error in errors %}
+                <li>{{error}}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</dir>
+
 </body>
 </html>
