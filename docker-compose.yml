@@ -1,0 +1,10 @@
+version: "3"
+services:
+        uploader:
+                image: local/download
+                build: .
+                ports: 
+                        - "8080:8000"
+                volumes:
+                        - ./files:/usr/src/app/files
+
