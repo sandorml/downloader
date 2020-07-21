@@ -2,4 +2,4 @@
 /venv
 /__pycache__
 /files/*
-!/files/.git_keep
+!/files/.gitkeep
